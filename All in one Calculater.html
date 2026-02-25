@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultimate All-in-One Calculator</title>
+
+<style>
+/* BODY & BACKGROUND */
+body{
+  margin:0;
+  font-family:system-ui;
+  background: linear-gradient(135deg, #0b132b, #1c2541);
+  color:white;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:16px;
+  font-size:26px;
+  font-weight:bold;
+  background: rgba(28,37,65,0.9);
+  text-shadow: 1px 1px 5px #06d6a0;
+}
+
+/* NAVIGATION */
+.nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  background: rgba(28,37,65,0.95);
+  box-shadow: 0 -2px 10px #000;
+}
+.nav button{
+  flex:1;
+  padding:14px;
+  background:none;
+  border:none;
+  color:white;
+  font-size:16px;
+  transition:0.3s;
+}
+.nav button:hover{
+  background: #06d6a0;
+  color:black;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* PAGES */
+.page{
+  display:none;
+  padding-bottom:120px;
+  transition:0.3s;
+}
+.active{
+  display:block;
+}
+
+/* DISPLAY */
+.display{
+  height:120px;
+  background:#000;
+  color:#00e5ff;
+  font-size:42px;
+  text-align:right;
+  padding:20px;
+  border-radius:20px;
+  margin:10px;
+  box-shadow: inset 0 0 10px #06d6a0;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:10px;
+}
+
+/* BUTTONS */
+.calcBtn{
+  height:70px;
+  font-size:24px;
+  border-radius:18px;
+  border:none;
+  background:#3a506b;
+  color:white;
+  transition:0.2s;
+  box-shadow: 0 4px #1c2541;
+}
+.calcBtn:active{
+  transform: scale(0.92);
+  box-shadow: 0 2px #1c2541;
+}
+.calcBtn:hover{
+  box-shadow: 0 6px #06d6a0;
+}
+
+/* COLORS */
+.operator{background:#5bc0be;color:black;}
+.equal{background:#06d6a0;color:black;}
+.clear{background:#ef476f;color:white;}
+
+/* TOOLS */
+.toolbox{padding:10px;}
+.tool{
+  background: rgba(28,37,65,0.9);
+  margin:12px;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow: 0 0 15px #06d6a0;
+  transition:0.3s;
+}
+.tool:hover{box-shadow: 0 0 25px #06d6a0;}
+.tool img{width:70px;margin-bottom:10px;}
+input, select{
+  width:90%;
+  padding:10px;
+  margin:5px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+}
+.toolBtn{
+  padding:10px 20px;
+  background:#06d6a0;
+  border:none;
+  border-radius:12px;
+  margin-top:10px;
+  font-weight:bold;
+  transition:0.3s;
+}
+.toolBtn:hover{
+  background:#00bfa5;
+  cursor:pointer;
+  transform: scale(1.05);
+}
+
+/* ABOUT */
+.about{text-align:center;padding:20px;font-size:18px;}
+.footer{
+  position:fixed;
+  bottom:50px;
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  color:#ccc;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+<div class="header">Ultimate All-in-One Calculator</div>
+
+<!-- HOME -->
+<div id="home" class="page active">
+<div id="screen" class="display">0</div>
+<div class="grid">
+<button class="calcBtn clear" onclick="playClick();clearScreen()">C</button>
+<button class="calcBtn" onclick="playClick();back()">⌫</button>
+<button class="calcBtn operator" onclick="playClick();addOp('%')">%</button>
+<button class="calcBtn operator" onclick="playClick();addOp('/')">÷</button>
+
+<button class="calcBtn" onclick="playClick();addNum('7')">7</button>
+<button class="calcBtn" onclick="playClick();addNum('8')">8</button>
+<button class="calcBtn" onclick="playClick();addNum('9')">9</button>
+<button class="calcBtn operator" onclick="playClick();addOp('*')">×</button>
+
+<button class="calcBtn" onclick="playClick();addNum('4')">4</button>
+<button class="calcBtn" onclick="playClick();addNum('5')">5</button>
+<button class="calcBtn" onclick="playClick();addNum('6')">6</button>
+<button class="calcBtn operator" onclick="playClick();addOp('-')">−</button>
+
+<button class="calcBtn" onclick="playClick();addNum('1')">1</button>
+<button class="calcBtn" onclick="playClick();addNum('2')">2</button>
+<button class="calcBtn" onclick="playClick();addNum('3')">3</button>
+<button class="calcBtn operator" onclick="playClick();addOp('+')">+</button>
+
+<button class="calcBtn" onclick="playClick();addNum('0')">0</button>
+<button class="calcBtn" onclick="playClick();dot()">.</button>
+<button class="calcBtn" onclick="playClick();sqrt()">√</button>
+<button class="calcBtn equal" onclick="playClick();result()">=</button>
+</div>
+</div>
+
+<!-- TOOLS -->
+<div id="tools" class="page">
+<div class="toolbox">
+
+<!-- AGE -->
+<div class="tool">
+<img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png">
+<h3>Age Calculator</h3>
+<input id="day" placeholder="Day (DD)">
+<input id="month" placeholder="Month (MM)">
+<input id="year" placeholder="Year (YYYY)">
+<button class="toolBtn" onclick="playClick();age()">Calculate</button>
+<p id="ageR"></p>
+</div>
+
+<!-- BMI -->
+<div class="tool">
+<img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png">
+<h3>BMI Calculator</h3>
+<input id="w" placeholder="Weight">
+<select id="weightUnit">
+  <option value="kg">kg</option>
+  <option value="lbs">lbs</option>
+  <option value="g">grams</option>
+</select>
+<br>
+<input id="h" placeholder="Height">
+<select id="heightUnit">
+  <option value="m">Meters</option>
+  <option value="cm">Centimeters</option>
+  <option value="ftin">Feet/Inches</option>
+</select>
+<div id="ftInInputs" style="display:none;">
+  <input id="ft" placeholder="Feet">
+  <input id="inch" placeholder="Inches">
+</div>
+<button class="toolBtn" onclick="playClick();bmi()">Calculate</button>
+<p id="bmiR"></p>
+</div>
+
+<!-- PERCENTAGE -->
+<div class="tool">
+<img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
+<h3>Percentage Calculator</h3>
+<input id="a" placeholder="Obtained">
+<input id="b" placeholder="Total">
+<button class="toolBtn" onclick="playClick();percent()">Calculate</button>
+<p id="perR"></p>
+</div>
+
+<!-- LENGTH -->
+<div class="tool">
+<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
+<h3>Length Converter</h3>
+<input id="cm" placeholder="Centimeter">
+<select id="lenUnit">
+  <option value="m">Meter</option>
+  <option value="ft">Feet</option>
+  <option value="inch">Inches</option>
+</select>
+<button class="toolBtn" onclick="playClick();cm()">Convert</button>
+<p id="cmR"></p>
+</div>
+
+<!-- SQUARE -->
+<div class="tool">
+<img src="https://cdn-icons-png.flaticon.com/512/3176/3176291.png">
+<h3>Square & Cube Calculator</h3>
+<input id="sq" placeholder="Number">
+<button class="toolBtn" onclick="playClick();square()">Calculate</button>
+<p id="sqR"></p>
+</div>
+
+</div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="page">
+<div class="about">
+<h2>Ultimate All-in-One Calculator</h2>
+<p>This professional calculator is designed for students, professionals, and global users seeking quick, accurate, and versatile tools. Supports multiple units, responsive design, click sounds, hover effects, and all major calculation features in a single interface.</p>
+<p>Fast • Accurate • Easy • Accessible • Global</p>
+</div>
+</div>
+
+<div class="footer">Made in India 🇮🇳</div>
+
+<!-- NAV -->
+<div class="nav">
+<button onclick="playClick();show('home')">Home</button>
+<button onclick="playClick();show('tools')">Tools</button>
+<button onclick="playClick();show('about')">About</button>
+</div>
+
+<script>
+let screen=document.getElementById("screen"), exp="";
+let clickSound=document.getElementById("clickSound");
+function playClick(){clickSound.currentTime=0; clickSound.play();}
+
+// CALCULATOR
+function addNum(n){exp+=n;screen.innerHTML=exp;}
+function addOp(op){if(exp=="")return;let last=exp.slice(-1);if("+-*/%".includes(last))return;exp+=op;screen.innerHTML=exp;}
+function dot(){exp+=".";screen.innerHTML=exp;}
+function clearScreen(){exp="";screen.innerHTML="0";}
+function back(){exp=exp.slice(0,-1);screen.innerHTML=exp||"0";}
+function result(){try{exp=eval(exp).toString();screen.innerHTML=exp;}catch{screen.innerHTML="Error";}}
+function sqrt(){exp=Math.sqrt(eval(exp)).toString();screen.innerHTML=exp;}
+function show(p){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active")); document.getElementById(p).classList.add("active");}
+
+// TOOLS
+document.getElementById("heightUnit").addEventListener("change", function(){ftInInputs.style.display=(this.value=="ftin")?"block":"none";});
+
+function age(){
+  let d=parseInt(day.value),m=parseInt(month.value),y=parseInt(year.value);
+  let today=new Date(),birth=new Date(y,m-1,d);
+  if(birth>today){ageR.innerHTML="Enter valid date"; return;}
+  let ageY=today.getFullYear()-birth.getFullYear();
+  let ageM=today.getMonth()-birth.getMonth();
+  let ageD=today.getDate()-birth.getDate();
+  if(ageD<0){ageM--;ageD+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
+  if(ageM<0){ageY--;ageM+=12;}
+  ageR.innerHTML=`Age = ${ageY} years, ${ageM} months, ${ageD} days`;
+}
+
+function bmi(){
+  let weight=parseFloat(w.value),wUnit=weightUnit.value;
+  if(wUnit=="lbs") weight*=0.453592;
+  if(wUnit=="g") weight/=1000;
+  let height=parseFloat(h.value),hUnit=heightUnit.value;
+  if(hUnit=="cm") height/=100;
+  if(hUnit=="ftin"){height=parseInt(ft.value)*0.3048+parseInt(inch.value)*0.0254;}
+  let bmiVal=(weight/(height*height)).toFixed(2);
+  let cat=""; if(bmiVal<18.5) cat="Underweight"; else if(bmiVal<25) cat="Normal"; else if(bmiVal<30) cat="Overweight"; else cat="Obese";
+  bmiR.innerHTML=`BMI = ${bmiVal} (${cat})`;
+}
+
+function percent(){perR.innerHTML=(a.value/b.value*100).toFixed(2)+"%";}
+function cm(){
+  let val=parseFloat(cm.value),unit=lenUnit.value,res;
+  if(unit=="m") res=val/100+" m"; else if(unit=="ft") res=(val*0.0328084).toFixed(2)+" ft"; else res=(val*0.393701).toFixed(2)+" in";
+  cmR.innerHTML=res;
+}
+function square(){sqR.innerHTML=sq.value*sq.value;}
+</script>
+
+</body>
+</html>
